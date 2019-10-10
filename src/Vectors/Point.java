@@ -3,43 +3,56 @@ package Vectors;
  * This can store the location of a point in 2 or 3 dimensions.
  */
 
-public class Point {
-    private static final double EQUALS_EPSILON = 0.0000001;
-    private double _x;
-    private double _y;
-    private double _z;
+import java.math.BigDecimal;
 
-    public Point(double x, double y) {
+public class Point {
+    private Number _x;
+    private Number _y;
+    private Number _z;
+
+    public Point(Number x, Number y) {
         _x = x;
         _y = y;
+        _z = DecimalNumber.ZERO;
     }
 
-    public Point(double x, double y, double z) {
+    public Point(double x, double y) {
+        _x = new DecimalNumber(new BigDecimal(x));
+        _y = new DecimalNumber(new BigDecimal(y));
+    }
+
+    public Point(Number x, Number y, Number z) {
         _x = x;
         _y = y;
         _z = z;
     }
 
+    public Point(double x, double y, double z) {
+        _x = new DecimalNumber(new BigDecimal(x));
+        _y = new DecimalNumber(new BigDecimal(y));
+        _z = new DecimalNumber(new BigDecimal(z));
+    }
 
-    public double getX() {
+
+    public Number getX() {
         return _x;
     }
 
-    public double getY() {
+    public Number getY() {
         return _y;
     }
 
-    public double getZ() {
+    public Number getZ() {
         return _z;
     }
 
     public String toString() {
-        return (_z == 0) ? (_x + ", " + _y) : (_x + ", " + _y + ", " + _z);
+        return (_z.equals(DecimalNumber.ZERO)) ? (_x + ", " + _y) : (_x + ", " + _y + ", " + _z);
     }
 
     public boolean equals(Point other) {
-        return ((Math.abs(_x - other.getX()) < EQUALS_EPSILON) &&
-                (Math.abs(_y - other.getY()) < EQUALS_EPSILON) &&
-                (Math.abs(_z - other.getZ()) < EQUALS_EPSILON));
+        return _x.approximateEquals(other.getX()) &&
+                _y.approximateEquals(other.getY()) &&
+                _z.approximateEquals(other.getZ());
     }
 }

@@ -7,22 +7,34 @@ package Vectors;
 import java.math.BigDecimal;
 
 public class Vector {
-    private double _x;
-    private double _y;
-    private double _z;
+    private Number _x;
+    private Number _y;
+    private Number _z;
 
     private final static double EQUALS_EPSILON = 0.0000001;
 
-    public Vector (double x, double y) {
+    public Vector(Number x, Number y) {
         _x = x;
         _y = y;
-        _z = 0;
+        _z = DecimalNumber.ZERO;
     }
 
-    public Vector (double x, double y, double z) {
+    public Vector (double x, double y) {
+        _x = new DecimalNumber(new BigDecimal(x));
+        _y = new DecimalNumber(new BigDecimal(y));
+        _z = DecimalNumber.ZERO;
+    }
+
+    public Vector (Number x, Number y, Number z) {
         _x = x;
         _y = y;
         _z = z;
+    }
+
+    public Vector (double x, double y, double z) {
+        _x = new DecimalNumber(x);
+        _y = new DecimalNumber(y);
+        _z = new DecimalNumber(z);
     }
 
     // Creates vector from origin to the input point.
@@ -34,52 +46,48 @@ public class Vector {
 
     // Creates vector from the first point to the second point.
     public Vector (Point p1, Point p2) {
-        _x = p2.getX() - p1.getX();
-        _y = p2.getY() - p1.getY();
-        _z = p2.getZ() - p1.getZ();
+        _x = p2.getX().subtract(p1.getX());
+        _y = p2.getY().subtract(p1.getY());
+        _z = p2.getZ().subtract(p1.getZ());
     }
 
 
     // Returns a new vector that is the result of adding this one to the input
     public Vector add(Vector other) {
-        return new Vector(_x + other.getX(), _y + other.getY(), _z + other.getZ());
+        return new Vector(_x.add(other.getX()), _y.add(other.getY()), _z.add(other.getZ()));
     }
 
     // Returns a dot product double that represents "this * input"
     // Works in both 2 and 3 dimensions.
-    public double dotProduct(Vector other) {
-        return (_x*other.getX() + _y*other.getY() + _z * other.getZ());
+    public Number dotProduct(Vector other) {
+        return (_x.multiply(other.getX()).add(_y.multiply(other.getY())).add(_z.multiply(other.getZ())));
     }
 
     // Returns a new vector that is the cross product "this x input"
     public Vector crossProduct(Vector other) {
-        Vector crossProduct = new Vector(_y*other.getZ() - _z*other.getY(),
-                -1 * (_x*other.getZ() - _z*other.getX()),
-                _x*other.getY() - _y*other.getX());
+        Vector crossProduct = new Vector(_y.multiply(other.getZ()).subtract(_z.multiply(other.getY())),
+                _x.multiply(other.getZ()).subtract(_z.multiply(other.getX())).multiply(new DecimalNumber(-1)),
+                _x.multiply(other.getY()).subtract(_y.multiply(other.getX())));
         return crossProduct;
     }
 
     public boolean isPerpendicularTo(Vector other) {
-        return Math.abs(this.dotProduct(other)) < EQUALS_EPSILON;
+        return this.dotProduct(other).abs().isLessThan(new DecimalNumber(EQUALS_EPSILON));
     }
 
     public boolean isParallelTo(Vector other) {
         return this.crossProduct(other).equals(new Vector(0,0,0));
     }
 
-    public Vector clone() {
-        return new Vector(_x, _y, _z);
-    }
-
-    public double getX() {
+    public Number getX() {
         return _x;
     }
 
-    public double getY() {
+    public Number getY() {
         return _y;
     }
 
-    public double getZ() {
+    public Number getZ() {
         return _z;
     }
 
@@ -87,16 +95,16 @@ public class Vector {
         return "<" + _x + ", " + _y + ", " + _z + ">";
     }
 
-    public double magnitude() {
-        return Math.sqrt(_x*_x + _y*_y + _z*_z);
+    public Number magnitude() {
+        return (_x.multiply(_x).add(_y.multiply(_y)).add(_z.multiply(_z)));
     }
 
-    public Vector divide(double divisor) {
-        return new Vector(_x/divisor, _y/divisor, _z/divisor);
+    public Vector divide(Number divisor) {
+        return new Vector(_x.divide(divisor), _y.divide(divisor), _z.divide(divisor));
     }
 
-    public Vector multiply(double input) {
-        return new Vector(_x*input, _y*input, _z*input);
+    public Vector multiply(Number multiplier) {
+        return new Vector(_x.multiply(multiplier), _y.multiply(multiplier), _z.multiply(multiplier));
     }
 
     public Vector toUnitVector() {
@@ -107,14 +115,13 @@ public class Vector {
     }
 
     public boolean equals(Vector other) {
-        return dEquals(_x, other.getX()) &&
-                dEquals(_y, other.getY()) &&
-                dEquals(_z, other.getZ());
+        return _x.approximateEquals(other.getX()) &&
+                _y.approximateEquals(other.getY()) &&
+                _z.approximateEquals(other.getZ());
     }
 
     public Angle angleTo(Vector u) {
-        double dotProduct = this.dotProduct(u);
-        return new Angle(new BigDecimal((180 / Math.PI) * Math.acos(dotProduct / this.magnitude() / u.magnitude())));
+        return dotProduct(u).divide(this.magnitude().multiply(u.magnitude())).arccos();
     }
 
     private static boolean dEquals(double a, double b) {
