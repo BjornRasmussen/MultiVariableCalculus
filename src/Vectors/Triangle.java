@@ -27,16 +27,15 @@ public class Triangle {
     }
 
     public Point[] getPoints() {
-        Point[] output = {_p1, _p2, _p3};
-        return output;
+        return new Point[]{_p1, _p2, _p3};
     }
 
-    public double getArea() {
+    public Number getArea() {
         // Area = "|(p1->p2 x p1->p3)| * 0.5"
         Vector v1 = new Vector(_p1, _p2);
         Vector v2 = new Vector(_p1, _p3);
         Vector crossProduct = v1.crossProduct(v2);
-        return crossProduct.magnitude() / 2;
+        return crossProduct.magnitude().divide(new DecimalNumber(2));
     }
 
     public String getAreaString() {
@@ -48,10 +47,6 @@ public class Triangle {
 
     public String toString() {
         return "(" + _p1 + "), (" + _p2 + "), (" + _p3 + ")";
-    }
-
-    public Triangle clone() {
-        return new Triangle(_p1, _p2, _p3);
     }
 
     private void validate() {

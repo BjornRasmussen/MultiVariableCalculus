@@ -4,13 +4,17 @@ import java.math.BigDecimal;
 
 public interface Number {
 
-    // Getter:
-    public BigDecimal value();
+    // Getters:
+    BigDecimal value();
+    double doubleValue();
+    int intValue();
+    long longValue();
 
-    // Logic
+    // Logic operations
     default boolean isGreaterThan(Number other) {
         return value().compareTo(other.value()) > 0;
     }
+
     default boolean isGreaterOrEqualTo(Number other) {
         return value().compareTo(other.value()) >= 0;
     }
@@ -29,6 +33,18 @@ public interface Number {
 
     default boolean approximateEquals(Number other) {
         return subtract(other).abs().isLessThan(new DecimalNumber(0.0000001));
+    }
+
+    default boolean isNegative() {
+        return isLessThan(DecimalNumber.ZERO);
+    }
+
+    default boolean isPositive() {
+        return isGreaterThan(DecimalNumber.ZERO);
+    }
+
+    default boolean isZero() {
+        return this.equals(DecimalNumber.ZERO);
     }
 
     // Basic immutable math operations.
@@ -55,7 +71,7 @@ public interface Number {
     Number log10(Number other);
 
     // Abs: returns the size of this number
-    default public Number abs() {
+    default Number abs() {
         if (value().equals(BigDecimal.ZERO)) {
             return new DecimalNumber(0);
         }

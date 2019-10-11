@@ -1,5 +1,7 @@
 package Functions;
 
+import Vectors.Number;
+import Vectors.DecimalNumber;
 import java.math.BigDecimal;
 
 public class Variable implements Value {
@@ -14,17 +16,28 @@ public class Variable implements Value {
     }
 
     @Override
-    public BigDecimal getValue(VariableValue[] values) {
+    public Number getValue(VariableValue[] values) {
         for (VariableValue v : values) {
             if (v.getName().equals(_name)) {
-                return v.getVarValue().getValue(null);
+                return v.getVarValue();
             }
         }
         throw new RuntimeException("NO VALUE FOUND FOR \"" + _name + "\" IN INPUT VariableValue[]");
     }
 
     @Override
-    public BigDecimal getValue() {
-        throw new RuntimeException("NO VALUE ENTERED THROUGH getValue() FOR " + _name);
+    public Number getValue() {
+        throw new UnsupportedOperationException("Cannot call getValue() on a Variable (" + _name + ") without entering a VariableValue[].");
     }
+
+    @Override
+    public Variable[] getVariables() {
+        return new Variable[] {this};
+    }
+
+    public boolean equals(Variable other) {
+        // Just checks names.
+        return getName().equals(other.getName());
+    }
+
 }

@@ -1,9 +1,9 @@
 package Functions;
 
-import java.math.BigDecimal;
+import Vectors.Number;
 
 /*
- * Takes in a single variable and spits out a single value when evaluated.
+ * A simple function: contains a value, and can be evaluated.
  */
 
 public class Function implements Value {
@@ -15,16 +15,21 @@ public class Function implements Value {
     }
 
     @Override
-    public BigDecimal getValue(VariableValue[] values) {
+    public Number getValue(VariableValue[] values) {
         return _value.getValue(values);
     }
-    public BigDecimal getValue() {
+    public Number getValue() {
         return _value.getValue();
     }
 
-    public BigDecimal getValue(VariableValue value) {
+    @Override
+    public Variable[] getVariables() {
+        return _value.getVariables();
+    }
+
+    public Number getValue(VariableValue value) {
         VariableValue[] values = new VariableValue[1];
         values[0] = value;
-        return _value.getValue(values);
+        return getValue(values);
     }
 }

@@ -1,9 +1,9 @@
 package Functions.Modifiers;
 
 import Functions.Value;
+import Functions.Variable;
 import Functions.VariableValue;
-
-import java.math.BigDecimal;
+import Vectors.Number;
 
 /*
  * Stores a-b, where a and b are Values.
@@ -19,12 +19,17 @@ public class Subtract implements Modifier {
     }
 
     @Override
-    public BigDecimal getValue(VariableValue[] values) {
+    public Number getValue(VariableValue[] values) {
         return _a.getValue(values).subtract(_b.getValue(values));
     }
 
     @Override
-    public BigDecimal getValue() {
+    public Number getValue() {
         return _a.getValue().subtract(_b.getValue());
+    }
+
+    @Override
+    public Variable[] getVariables() {
+        return extractVariables(new Value[] { _a, _b});
     }
 }

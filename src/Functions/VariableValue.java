@@ -1,10 +1,12 @@
 package Functions;
 
+import Vectors.Number;
+
 public class VariableValue {
     String _varName;
-    private Value _value;
+    private Number _value;
 
-    public VariableValue(String name, Value value) {
+    public VariableValue(String name, Number value) {
         _varName = name;
         _value = value;
     }
@@ -13,7 +15,11 @@ public class VariableValue {
         return _varName;
     }
 
-    public Value getVarValue() {
+    public Number getVarValue() {
         return _value;
+    }
+
+    public String toString() {
+        return _varName + ", which equals " + _value;
     }
 }

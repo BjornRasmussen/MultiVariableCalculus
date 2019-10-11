@@ -9,7 +9,7 @@ public class Line {
 
     public Line(Point basePoint, Vector direction) {
         _p = basePoint;
-        _v = direction.clone();
+        _v = direction;
     }
 
     public boolean equals(Line other) {
@@ -22,11 +22,9 @@ public class Line {
         Vector otherDirection = other.direction();
         Vector thisDirection = _v.toUnitVector();
 
-        System.out.println("Slope equals: " + (thisDirection.equals(otherDirection) ||
-                thisDirection.equals(otherDirection.multiply(-1)))); // FIXME debugging
 
         return (thisDirection.equals(otherDirection) ||
-                thisDirection.equals(otherDirection.multiply(-1)));
+                thisDirection.equals(otherDirection.multiply(new DecimalNumber(-1))));
     }
 
     public boolean contains(Point p) {
@@ -154,19 +152,12 @@ public class Line {
         return _v.toUnitVector();
     }
 
-    public Line clone() {
-        return new Line(_p, _v.clone());
-    }
-
     public Point basePoint() {
         return _p;
     }
 
     public Vector directionVector() {
-        return _v.clone();
+        return _v;
     }
 
-    private boolean dEquals(double a, double b) {
-        return Math.abs(a-b) < EQUALS_EPSILON;
-    }
 }

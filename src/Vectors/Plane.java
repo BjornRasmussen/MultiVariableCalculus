@@ -9,15 +9,13 @@ public class Plane {
     public Plane(Vector normalVector, Point basePoint) {
         _v = normalVector;
         _p = basePoint;
+        validate();
     }
 
     public Plane(Point basePoint, Vector normalVector) {
         _v = normalVector;
         _p = basePoint;
-    }
-
-    public Plane clone() {
-        return new Plane(_v.clone(), _p);
+        validate();
     }
 
     public boolean equals(Plane other) {
@@ -43,5 +41,21 @@ public class Plane {
 
     public Point basePoint() {
         return _p;
+    }
+
+    private void validate() {
+        if (_p == null) {
+            throw new IllegalArgumentException("Null point entered into new plane.");
+        }
+        if (_v == null) {
+            throw new IllegalArgumentException("Null vector entered into new plane.");
+        }
+        if (_v.equals(Vector.ZERO)) {
+            throw new IllegalArgumentException("Zero vectors cannot define direction.");
+        }
+    }
+
+    public String toString() {
+        return "Point: " + _p.toString3D() + ", Normal Vector: " + _v.toString3D();
     }
 }

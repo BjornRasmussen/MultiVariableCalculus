@@ -1,32 +1,38 @@
 package Functions;
 
-import java.math.BigDecimal;
-
+import Vectors.Number;
+import Vectors.DecimalNumber;
 /*
- * Stores an integer constant, or basic value, such as 5, 19, -12, 0, or 1023919284812.
+ * Stores a Number (constant), or basic value, such as 5, 19.5, -12, 0, or 1023919284812.
  */
 
 public class Constant implements Value {
-    BigDecimal _value;
+    Number _value;
 
     public Constant(int value) {
-        _value = new BigDecimal(value);
+        _value = new DecimalNumber(value);
     }
 
-    public Constant(BigDecimal value) {
-        _value = new BigDecimal(value.toBigInteger()); // Rounds down to integer.
-
-        if (value.compareTo(value) != 0) {
-            // input is not an integer.
-            throw new RuntimeException("A Constant was created with a non integer value.");
-        }
+    public Constant(String value) {
+        _value = new DecimalNumber(value);
     }
 
-    public BigDecimal getValue(VariableValue[] values /* this is ignored, but needed for compatibility. */) {
+    public Constant(Number value) {
+        _value = value;
+    }
+
+    @Override
+    public Number getValue(VariableValue[] values /* this is ignored, but needed for compatibility. */) {
         return _value;
     }
 
-    public BigDecimal getValue() {
+    @Override
+    public Number getValue() {
         return _value;
+    }
+
+    @Override
+    public Variable[] getVariables() {
+        return new Variable[0];
     }
 }

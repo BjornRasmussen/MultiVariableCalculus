@@ -11,6 +11,8 @@ public class Vector {
     private Number _y;
     private Number _z;
 
+    public final static Vector ZERO = new Vector(0,0,0);
+
     private final static double EQUALS_EPSILON = 0.0000001;
 
     public Vector(Number x, Number y) {
@@ -20,9 +22,20 @@ public class Vector {
     }
 
     public Vector (double x, double y) {
-        _x = new DecimalNumber(new BigDecimal(x));
-        _y = new DecimalNumber(new BigDecimal(y));
-        _z = DecimalNumber.ZERO;
+        this(new DecimalNumber(x), new DecimalNumber(y), DecimalNumber.ZERO);
+    }
+
+    public Vector (int x, int y) {
+        this(new DecimalNumber(x), new DecimalNumber(y), DecimalNumber.ZERO);
+
+    }
+
+    public Vector (long x, long y) {
+        this(new DecimalNumber(x), new DecimalNumber(y), DecimalNumber.ZERO);
+    }
+
+    public Vector (String x, String y) {
+        this(new DecimalNumber(x), new DecimalNumber(y), DecimalNumber.ZERO);
     }
 
     public Vector (Number x, Number y, Number z) {
@@ -32,9 +45,19 @@ public class Vector {
     }
 
     public Vector (double x, double y, double z) {
-        _x = new DecimalNumber(x);
-        _y = new DecimalNumber(y);
-        _z = new DecimalNumber(z);
+        this(new DecimalNumber(x), new DecimalNumber(y), new DecimalNumber(z));
+    }
+
+    public Vector (int x, int y, int z) {
+        this(new DecimalNumber(x), new DecimalNumber(y), new DecimalNumber(z));
+    }
+
+    public Vector (long x, long y, long z) {
+        this(new DecimalNumber(x), new DecimalNumber(y), new DecimalNumber(z));
+    }
+
+    public Vector (String x, String y, String z) {
+        this(new DecimalNumber(x), new DecimalNumber(y), new DecimalNumber(z));
     }
 
     // Creates vector from origin to the input point.
@@ -91,7 +114,13 @@ public class Vector {
         return _z;
     }
 
+    @Override
     public String toString() {
+        return (_z.equals(DecimalNumber.ZERO)) ? ("<" + _x + ", " + _y + ">") : ("<" + _x + ", " + _y + ", " + _z + ">");
+
+    }
+
+    public String toString3D() {
         return "<" + _x + ", " + _y + ", " + _z + ">";
     }
 
@@ -122,9 +151,5 @@ public class Vector {
 
     public Angle angleTo(Vector u) {
         return dotProduct(u).divide(this.magnitude().multiply(u.magnitude())).arccos();
-    }
-
-    private static boolean dEquals(double a, double b) {
-        return Math.abs(a-b) < EQUALS_EPSILON;
     }
 }

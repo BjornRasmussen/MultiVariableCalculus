@@ -4,12 +4,17 @@ package Vectors;
  * Provides a bunch of useful methods.
  */
 
+import Vectors.arXiv.BigDecimalMath;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
 public class DecimalNumber implements Number {
     public static final Number ZERO = new DecimalNumber("0");
+    public static final Number ONE = new DecimalNumber("1");
+    public static final Number TWO = new DecimalNumber("2");
+    public static final Number TEN = new DecimalNumber("10");
+    public static final Number HALF = new DecimalNumber("0.5");
     public static final Number PI = new DecimalNumber("3.14159265358979323846264338327950288419716939937510582097494" +
             "4592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450" +
             "2841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669" +
@@ -54,6 +59,21 @@ public class DecimalNumber implements Number {
     }
 
     @Override
+    public double doubleValue() {
+        return _value.doubleValue();
+    }
+
+    @Override
+    public int intValue() {
+        return _value.intValue();
+    }
+
+    @Override
+    public long longValue() {
+        return _value.longValue();
+    }
+
+    @Override
     public Number add(Number other) {
         return new DecimalNumber(_value.add(other.value()));
     }
@@ -74,24 +94,29 @@ public class DecimalNumber implements Number {
     }
 
     @Override
-    public Number mod(Number other) {
+    public Number mod(Number modulus) {
+        if (modulus.equals(ZERO)) {
+            throw new IllegalArgumentException("Mod 0 is undefined.");
+        } else if (this.equals(ZERO)) {
+            return this;
+        }
+
         BigDecimal myNumber = this.value();
-        BigDecimal mod = other.value();
+        BigDecimal mod = modulus.abs().value();
 
         // Initial simplification: should make values that have 1000 digits very easy to operate on.
-        if (myNumber.compareTo(mod.multiply(new BigDecimal("1000"))) > 0) {
-            String myNumberString = myNumber.toString();
-            int numDigitsMinus2 = myNumberString.length() - 2;
-            int modDigitsPlus1 = mod.toString().length() + 2;
-            myNumber = myNumber.subtract(mod.multiply(new BigDecimal(Math.pow(10, numDigitsMinus2-modDigitsPlus1))));
-        }
+        BigDecimal timesBiggerThanMod = myNumber.divide(mod, RoundingMode.HALF_UP);
+        BigInteger timesBiggerThanModInt = new BigInteger((timesBiggerThanMod.toBigInteger().toString()
+                + ".foo").split("\\.")[0]).subtract(new BigInteger("10"));
+        myNumber = myNumber.subtract(mod.multiply(new BigDecimal(timesBiggerThanModInt)));
 
-        if (myNumber.compareTo(mod) < 0) {
-            throw new RuntimeException("SOMETHING WENT WRONG! Small myNumber value encountered.");
-        }
 
         // Now, find mod.
         while(myNumber.compareTo(mod) > 0) {
+            myNumber = myNumber.subtract(mod);
+        }
+
+        if (modulus.isNegative()) {
             myNumber = myNumber.subtract(mod);
         }
 
@@ -100,81 +125,94 @@ public class DecimalNumber implements Number {
 
     @Override
     public Number power(Number other) {
-        return null;
+        // Returns this^other
+        return new DecimalNumber(BigDecimalMath.pow(this.value(), other.value()));
     }
 
     @Override
     public Number logBase(Number other) {
-        return null;
+        // Returns log (base other) of this.
+        return new DecimalNumber(BigDecimalMath.log(this.value()).divide(BigDecimalMath.log(other.value()), 1000, RoundingMode.HALF_UP));
     }
 
     @Override
     public Number ln(Number other) {
-        return null;
+        return new DecimalNumber(BigDecimalMath.log(this.value()));
     }
 
     @Override
     public Number log10(Number other) {
-        return null;
+        return logBase(new DecimalNumber("10"));
     }
 
     @Override
     public Number sin() {
-        return null;
+        return new DecimalNumber(BigDecimalMath.sin(this.value()));
     }
 
     @Override
     public Number cos() {
-        return null;
+        return new DecimalNumber(BigDecimalMath.cos(this.value()));
     }
 
     @Override
     public Number tan() {
-        return null;
+        return new DecimalNumber(BigDecimalMath.tan(this.value()));
     }
 
     @Override
     public Number csc() {
-        return null;
+        return new DecimalNumber(BigDecimal.ONE.divide(BigDecimalMath.sin(this.value()), 1000, RoundingMode.HALF_UP));
     }
 
     @Override
     public Number sec() {
-        return null;
+        return new DecimalNumber(BigDecimal.ONE.divide(BigDecimalMath.cos(this.value()), 1000, RoundingMode.HALF_UP));
     }
 
     @Override
     public Number cot() {
-        return null;
+        return new DecimalNumber(BigDecimal.ONE.divide(BigDecimalMath.tan(this.value()), 1000, RoundingMode.HALF_UP));
     }
 
     @Override
     public Angle arcsin() {
-        return null;
+        throw new UnsupportedOperationException("Not yet supported.");
+        // TODO: Expand this later to use a taylor series approximation to get within 1000 sig figs of the correct value.
     }
 
     @Override
     public Angle arccos() {
-        return null;
+        throw new UnsupportedOperationException("Not yet supported.");
+        // TODO: Expand this later to use a taylor series approximation to get within 1000 sig figs of the correct value.
     }
 
     @Override
     public Angle arctan() {
-        return null;
+        throw new UnsupportedOperationException("Not yet supported.");
+        // TODO: Expand this later to use a taylor series approximation to get within 1000 sig figs of the correct value.
     }
 
     @Override
     public Angle arccsc() {
-        return null;
+        throw new UnsupportedOperationException("Not yet supported.");
+        // TODO: Expand this later to use a taylor series approximation to get within 1000 sig figs of the correct value.
     }
 
     @Override
     public Angle arcsec() {
-        return null;
+        throw new UnsupportedOperationException("Not yet supported.");
+        // TODO: Expand this later to use a taylor series approximation to get within 1000 sig figs of the correct value.
     }
 
     @Override
     public Angle arccot() {
-        return null;
+        throw new UnsupportedOperationException("Not yet supported.");
+        // TODO: Expand this later to use a taylor series approximation to get within 1000 sig figs of the correct value.
+    }
+
+    @Override
+    public String toString() {
+        return _value.toString();
     }
 }

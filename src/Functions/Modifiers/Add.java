@@ -1,9 +1,12 @@
 package Functions.Modifiers;
 
 import Functions.Value;
+import Functions.Variable;
 import Functions.VariableValue;
 
-import java.math.BigDecimal;
+import Vectors.Number;
+import Vectors.DecimalNumber;
+
 /*
  * Stores two Values, and returns the values of the two added together when getValue is called.
  */
@@ -36,8 +39,8 @@ public class Add implements Modifier {
     }
 
     @Override
-    public BigDecimal getValue(VariableValue[] values) {
-        BigDecimal output = new BigDecimal(0);
+    public Number getValue(VariableValue[] values) {
+        Number output = new DecimalNumber(0);
         for (Value v : _values) {
             output = output.add(v.getValue(values));
         }
@@ -45,11 +48,16 @@ public class Add implements Modifier {
     }
 
     @Override
-    public BigDecimal getValue() {
-        BigDecimal output = new BigDecimal(0);
+    public Number getValue() {
+        Number output = new DecimalNumber(0);
         for (Value v : _values) {
             output = output.add(v.getValue());
         }
         return output;
+    }
+
+    @Override
+    public Variable[] getVariables() {
+        return extractVariables(_values);
     }
 }

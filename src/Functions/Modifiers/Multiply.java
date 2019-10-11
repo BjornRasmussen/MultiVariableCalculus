@@ -1,9 +1,11 @@
 package Functions.Modifiers;
 
 import Functions.Value;
+import Functions.Variable;
 import Functions.VariableValue;
 
-import java.math.BigDecimal;
+import Vectors.Number;
+import Vectors.DecimalNumber;
 
 public class Multiply implements Modifier {
     Value[] _values;
@@ -19,8 +21,8 @@ public class Multiply implements Modifier {
     }
 
     @Override
-    public BigDecimal getValue(VariableValue[] values) {
-        BigDecimal output = new BigDecimal(1);
+    public Number getValue(VariableValue[] values) {
+        Number output = DecimalNumber.ONE;
         for (Value v : _values) {
             output = output.multiply(v.getValue(values));
         }
@@ -28,11 +30,16 @@ public class Multiply implements Modifier {
     }
 
     @Override
-    public BigDecimal getValue() {
-        BigDecimal output = new BigDecimal(1);
+    public Number getValue() {
+        Number output = DecimalNumber.ONE;
         for (Value v : _values) {
             output = output.multiply(v.getValue());
         }
         return output;
+    }
+
+    @Override
+    public Variable[] getVariables() {
+        return extractVariables(_values);
     }
 }

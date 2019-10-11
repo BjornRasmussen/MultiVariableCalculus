@@ -1,10 +1,12 @@
 package Functions.Modifiers;
 
 import Functions.Value;
+import Functions.Variable;
 import Functions.VariableValue;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
+import Vectors.Number;
+import Vectors.DecimalNumber;
 
 /*
  * Stores a/b, where a and b are Values.
@@ -19,13 +21,17 @@ public class Divide implements Modifier {
     }
 
     @Override
-    public BigDecimal getValue(VariableValue[] values) {
-        return _a.getValue(values).divide(_b.getValue(values), 100, RoundingMode.HALF_UP);
+    public Number getValue(VariableValue[] values) {
+        return _a.getValue(values).divide(_b.getValue(values));
     }
 
     @Override
-    public BigDecimal getValue() {
-        return _a.getValue().divide(_b.getValue(), 100, RoundingMode.HALF_UP);
+    public Number getValue() {
+        return _a.getValue().divide(_b.getValue());
     }
 
+    @Override
+    public Variable[] getVariables() {
+        return extractVariables(new Value[] {_a, _b});
+    }
 }
