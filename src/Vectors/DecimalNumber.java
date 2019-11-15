@@ -5,15 +5,28 @@ package Vectors;
  */
 
 import Vectors.arXiv.BigDecimalMath;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
 public class DecimalNumber implements Number {
-    public static final Number ZERO = new DecimalNumber("0");
-    public static final Number ONE = new DecimalNumber("1");
-    public static final Number TWO = new DecimalNumber("2");
-    public static final Number TEN = new DecimalNumber("10");
+    public static final Number NEGATIVE_ONE = new DecimalNumber(-1);
+    public static final Number ZERO = new DecimalNumber(0);
+    public static final Number ONE = new DecimalNumber(1);
+    public static final Number TWO = new DecimalNumber(2);
+    public static final Number THREE = new DecimalNumber(3);
+    public static final Number FOUR = new DecimalNumber(4);
+    public static final Number FIVE = new DecimalNumber(5);
+    public static final Number SIX = new DecimalNumber(6);
+    public static final Number SEVEN = new DecimalNumber(7);
+    public static final Number EIGHT = new DecimalNumber(8);
+    public static final Number NINE = new DecimalNumber(9);
+    public static final Number TEN = new DecimalNumber(10);
+    public static final Number HUNDRED = new DecimalNumber(100);
+    public static final Number THOUSAND = new DecimalNumber(1000);
+    public static final Number MILLION = new DecimalNumber(1000000);
+    public static final Number BILLION = new DecimalNumber(1000000000);
     public static final Number HALF = new DecimalNumber("0.5");
     public static final Number PI = new DecimalNumber("3.14159265358979323846264338327950288419716939937510582097494" +
             "4592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450" +
@@ -31,7 +44,7 @@ public class DecimalNumber implements Number {
 
     // Constructors
 
-    public DecimalNumber (BigDecimal value) {
+    public DecimalNumber(BigDecimal value) {
         _value = value;
     }
 
@@ -39,15 +52,15 @@ public class DecimalNumber implements Number {
         _value = new BigDecimal(value);
     }
 
-    public DecimalNumber (int value) {
+    public DecimalNumber(int value) {
         _value = new BigDecimal(value);
     }
 
-    public DecimalNumber (double value) {
+    public DecimalNumber(double value) {
         _value = new BigDecimal(value);
     }
 
-    public DecimalNumber (long value) {
+    public DecimalNumber(long value) {
         _value = new BigDecimal(value);
     }
 
@@ -90,7 +103,7 @@ public class DecimalNumber implements Number {
 
     @Override
     public Number divide(Number other) {
-        return new DecimalNumber(_value.divide(other.value(), RoundingMode.DOWN));
+        return new DecimalNumber(_value.divide(other.value(), 1000, RoundingMode.HALF_UP));
     }
 
     @Override
@@ -112,7 +125,7 @@ public class DecimalNumber implements Number {
 
 
         // Now, find mod.
-        while(myNumber.compareTo(mod) > 0) {
+        while (myNumber.compareTo(mod) > 0) {
             myNumber = myNumber.subtract(mod);
         }
 
@@ -214,5 +227,6 @@ public class DecimalNumber implements Number {
     @Override
     public String toString() {
         return _value.toString();
+
     }
 }

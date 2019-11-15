@@ -47,6 +47,15 @@ public interface Number {
         return this.equals(DecimalNumber.ZERO);
     }
 
+    default Number negate() {
+        return multiply(DecimalNumber.NEGATIVE_ONE);
+    }
+
+    default boolean isInteger() {
+        // Returns true if rounding down produces the same value.
+        return new BigDecimal(value().toBigInteger()).compareTo(value()) != 0;
+    }
+
     // Basic immutable math operations.
     Number add(Number other);
     Number subtract(Number other);
@@ -96,5 +105,22 @@ public interface Number {
     Angle arcsec();
     Angle arccot();
 
+    // Factorial
+    default Number factorial() {
+        if (!isInteger() || isNegative()) {
+            throw new UnsupportedOperationException("Factorials only supported for positive integers.");
+        }
 
+        if (equals(DecimalNumber.ZERO) || equals(DecimalNumber.ONE)) {
+            return DecimalNumber.ONE;
+        }
+
+        Number output = DecimalNumber.ONE;
+
+        for (Number n = new DecimalNumber(value()); n.isGreaterOrEqualTo(DecimalNumber.TWO); n = n.add(DecimalNumber.ONE)) {
+            output = output.multiply(n);
+        }
+
+        return output;
+    }
 }
